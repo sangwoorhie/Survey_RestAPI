@@ -10,6 +10,7 @@ import {
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { EntityWithId } from 'src/survey.type';
 
 @Controller('survey')
 export class QuestionController {
@@ -59,6 +60,7 @@ export class QuestionController {
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
   ) {
-    return await this.questionService.deleteQuestion(surveyId, questionId);
+    await this.questionService.deleteQuestion(surveyId, questionId);
+    return new EntityWithId(questionId);
   }
 }
