@@ -1,3 +1,6 @@
+import { Answer } from 'src/answer/entities/answer.entity';
+import { Survey } from 'src/survey/entities/survey.entity';
+import { Option } from 'src/option/entities/option.entity';
 import {
   Column,
   CreateDateColumn,

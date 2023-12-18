@@ -1,3 +1,5 @@
+import { Answer } from 'src/answer/entities/answer.entity';
+import { Survey } from 'src/survey/entities/survey.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,7 +13,7 @@ import {
 
 @Entity({ schema: 'User', name: 'Survey_RestAPI' })
 export class User {
-  constructor(partial?: Partial<Users>) {
+  constructor(partial?: Partial<User>) {
     Object.assign(this, partial);
   }
   @PrimaryGeneratedColumn()
@@ -42,15 +44,15 @@ export class User {
 
   // 관계설정
   // User - Survey : N : N 관계
-  @ManyToMany(() => Surveys, (surveys) => surveys.users, {
+  @ManyToMany(() => Survey, (surveys) => surveys.users, {
     cascade: false,
   })
   @JoinTable()
-  surveys: Surveys[];
+  surveys: Survey[];
 
   // User - Answer : 1 : N 관계
-  @OneToMany(() => Answers, (answers) => answers.user, {
+  @OneToMany(() => Answer, (answers) => answers.user, {
     cascade: false,
   })
-  answers: Promise<Answers[]>; // Lazy Relations
+  answers: Promise<Answer[]>; // Lazy Relations
 }

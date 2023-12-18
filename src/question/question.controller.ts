@@ -1,34 +1,64 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 
-@Controller('question')
+@Controller('survey')
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
-  @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionService.create(createQuestionDto);
+  // 문항 생성
+  @Post('/:surveyId/questions')
+  async createQuestion(
+    @Param('surveyId') surveyId: number,
+    @Body() createDto: CreateQuestionDto,
+  ) {
+    return await this.questionService.createQuestion(surveyId, createDto);
   }
 
-  @Get()
-  findAll() {
-    return this.questionService.findAll();
+  // 문항 목록조회
+  @Get('/:surveyId/questions')
+  async getQuestions(@Param('surveyId') surveyId: number) {
+    return await this.questionService.getQuestions(surveyId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionService.findOne(+id);
+  // 문항 상세조회
+  @Get('/:surveyId/questions/:questionId')
+  async getQuestion(
+    @Param('surveyId') surveyId: number,
+    @Param('questionId') questionId: number,
+  ) {
+    return await this.questionService.getQuestion(surveyId, questionId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionService.update(+id, updateQuestionDto);
+  // 문항 수정
+  @Patch('/:surveyId/questions/:questionId')
+  async updateQuestion(
+    @Param('surveyId') surveyId: number,
+    @Param('questionId') questionId: number,
+    @Body() updateDto: UpdateQuestionDto,
+  ) {
+    return await this.questionService.updateQuestion(
+      surveyId,
+      questionId,
+      updateDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionService.remove(+id);
+  // 문항 삭제
+  @Delete('/:surveyId/questions/:questionId')
+  async deleteQuestion(
+    @Param('surveyId') surveyId: number,
+    @Param('questionId') questionId: number,
+  ) {
+    return await this.questionService.deleteQuestion(surveyId, questionId);
   }
 }
