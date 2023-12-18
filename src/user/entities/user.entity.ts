@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Status } from '../userinfo';
 
 @Entity({ schema: 'User', name: 'Survey_RestAPI' })
 export class User {
@@ -33,7 +34,7 @@ export class User {
   })
   name: string;
 
-  @Column({ type: 'enum', enum: Status, default: Status.PROFESSOR })
+  @Column({ type: 'enum', enum: Status, default: Status.TEACHER })
   status: Status;
 
   @CreateDateColumn({ name: 'createdAt', type: 'timestamp' })

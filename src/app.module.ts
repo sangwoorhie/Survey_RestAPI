@@ -9,7 +9,14 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [SurveyModule, QuestionModule, OptionModule, AnswerModule, UserModule, AuthModule],
+  imports: [
+    SurveyModule,
+    QuestionModule,
+    OptionModule,
+    AnswerModule,
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
