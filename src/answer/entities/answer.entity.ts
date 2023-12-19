@@ -31,14 +31,20 @@ export class Answer {
   @ManyToOne(() => Survey, (survey) => survey.answers)
   @JoinColumn({ name: 'surveyId' })
   survey: Promise<Survey>;
+  @Column({ nullable: true })
+  surveyId: number;
 
   // Answers - Questions : 1 : 1 관계
   @OneToOne(() => Question, (question) => question.answer)
   @JoinColumn({ name: 'questionId' })
   question: Question;
+  @Column({ nullable: true })
+  questionId: number;
 
   // Answer - User : N : 1 관계
   @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn({ name: 'userId' })
   user: Promise<User>;
+  @Column({ nullable: true })
+  userId: number;
 }

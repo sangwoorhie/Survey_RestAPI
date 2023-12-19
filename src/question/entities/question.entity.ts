@@ -50,6 +50,8 @@ export class Question {
   @ManyToOne(() => Survey, (survey) => survey.questions)
   @JoinColumn({ name: 'surveyId' })
   survey: Promise<Survey>; // Lazy Relations
+  @Column({ nullable: true })
+  surveyId: number;
 
   // Question - Option : 1 : N 관계
   @OneToMany(() => Option, (options) => options.question, {
@@ -68,4 +70,6 @@ export class Question {
   @ManyToOne(() => User, (user) => user.questions)
   @JoinColumn({ name: 'userId' })
   user: Promise<User>;
+  @Column({ nullable: true })
+  userId: number;
 }

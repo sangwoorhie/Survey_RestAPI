@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { EntityWithId } from 'src/survey.type';
+import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
+import { User } from 'src/user/entities/user.entity';
+import { CurrentUser } from 'src/auth/current.user.decorator';
 
 @Controller('survey')
 export class QuestionController {
@@ -18,11 +22,13 @@ export class QuestionController {
 
   // 문항 생성
   @Post('/:surveyId/questions')
+  @UseGuards(AuthGuardJwt)
   async createQuestion(
     @Param('surveyId') surveyId: number,
     @Body() createDto: CreateQuestionDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.questionService.createQuestion(surveyId, createDto);
+    return await this.questionService.createQuestion(surveyId, createDto, user);
   }
 
   // 문항 목록조회

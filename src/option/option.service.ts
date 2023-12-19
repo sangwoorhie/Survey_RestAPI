@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
@@ -13,6 +14,7 @@ import { Survey } from 'src/survey/entities/survey.entity';
 import { Question } from 'src/question/entities/question.entity';
 import { Option } from './entities/option.entity';
 import { EntityWithId } from 'src/survey.type';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class OptionService {
@@ -31,8 +33,14 @@ export class OptionService {
     surveyId: number,
     questionId: number,
     createDto: CreateOptionDto,
+    user: User,
   ): Promise<Option> {
     try {
+      if (user.status !== 'teacher') {
+        throw new UnauthorizedException(
+          '선생님만 설문지를 생성할 수 있습니다.',
+        );
+      }
       await this.questionRepository.findOneOrFail({
         where: {
           survey: { id: surveyId },
@@ -60,6 +68,7 @@ export class OptionService {
 
       const { optionNumber, content, optionScore } = createDto;
       const newOption = this.optionRepository.create({
+        userId: user.id,
         surveyId,
         questionId,
         optionNumber,

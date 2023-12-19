@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -12,6 +13,7 @@ import { Survey } from 'src/survey/entities/survey.entity';
 import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 import { EntityWithId } from 'src/survey.type';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class QuestionService {
@@ -27,8 +29,14 @@ export class QuestionService {
   async createQuestion(
     surveyId: number,
     createDto: CreateQuestionDto,
+    user: User,
   ): Promise<Question> {
     try {
+      if (user.status !== 'teacher') {
+        throw new UnauthorizedException(
+          '선생님만 설문지를 생성할 수 있습니다.',
+        );
+      }
       await this.surveyRepository.findOneOrFail({
         where: { id: surveyId },
       });
@@ -59,6 +67,7 @@ export class QuestionService {
         );
       }
       const newQuestion = this.questionRepository.create({
+        userId: user.id,
         surveyId,
         questionNumber,
         content,

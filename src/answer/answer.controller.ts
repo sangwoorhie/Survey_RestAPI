@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { EntityWithId } from 'src/survey.type';
+import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
+import { CurrentUser } from 'src/auth/current.user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('surveys')
 export class AnswerController {
@@ -18,15 +22,18 @@ export class AnswerController {
 
   // 답안 생성
   @Post('/:surveyId/questions/:questionId/answers')
+  @UseGuards(AuthGuardJwt)
   async createAnswer(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
     @Body() createDto: CreateAnswerDto,
+    @CurrentUser() user: User,
   ) {
     return await this.answerService.createAnswer(
       surveyId,
       questionId,
       createDto,
+      user,
     );
   }
 

@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
@@ -12,6 +14,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from 'src/question/entities/question.entity';
 import { EntityWithId } from 'src/survey.type';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class SurveyService {
@@ -21,11 +24,18 @@ export class SurveyService {
     private readonly surveyRepository: Repository<Survey>,
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   // 설문지 생성
-  async createSurvey(createDto: CreateSurveyDto): Promise<Survey> {
+  async createSurvey(createDto: CreateSurveyDto, user: User): Promise<Survey> {
     try {
+      if (user.status !== 'teacher') {
+        throw new UnauthorizedException(
+          '선생님만 설문지를 생성할 수 있습니다.',
+        );
+      }
       const { title, description } = createDto;
 
       const existTitle = await this.surveyRepository.findOne({
@@ -44,7 +54,12 @@ export class SurveyService {
           '중복된 내용의 설문지가 존재합니다. 다른 내용으로 작성해주세요.',
         );
       }
-      const survey = this.surveyRepository.create(createDto);
+
+      const survey = this.surveyRepository.create({
+        userId: user.id,
+        title: title,
+        description: description,
+      });
       return await this.surveyRepository.save(survey);
     } catch (error) {
       this.logger.error(
@@ -58,17 +73,21 @@ export class SurveyService {
   async completeSurvey(
     surveyId: number,
     completeDto: CompleteSurveyDto,
+    user: User,
   ): Promise<Survey> {
     try {
       // 설문지없는경우 에러반환
       const survey = await this.surveyRepository.findOneOrFail({
         where: { id: surveyId },
       });
+      // 설문지 완료는 학생만 가능함
+      if (user.status !== 'student') {
+        throw new UnauthorizedException('학생만 설문지를 완료할 수 있습니다.');
+      }
 
       if (survey.isDone === true) {
         throw new BadRequestException('이미 완료된 설문지입니다.');
       }
-
       const { isDone } = completeDto;
       if (isDone === false || isDone !== true) {
         throw new BadRequestException(
@@ -157,15 +176,22 @@ export class SurveyService {
   async updateSurvey(
     surveyId: number,
     updateDto: UpdateSurveyDto,
+    user: User,
   ): Promise<Survey> {
     try {
       // 설문지없는경우 에러반환
       const survey = await this.surveyRepository.findOneOrFail({
         where: { id: surveyId },
+        relations: ['user'],
       });
+      // 설문지 생성자만 수정가능, (생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (survey.userId !== user.id) {
+        throw new ForbiddenException(
+          '설문지를 생성한 본인만 수정이 가능합니다.',
+        );
+      }
 
       const { title, description } = updateDto;
-
       const existTitle = await this.surveyRepository.findOne({
         where: { title: title },
       });
@@ -197,12 +223,18 @@ export class SurveyService {
   }
 
   // 설문지 삭제
-  async deleteSurvey(surveyId: number): Promise<EntityWithId> {
+  async deleteSurvey(surveyId: number, user: User): Promise<EntityWithId> {
     try {
       const survey = await this.surveyRepository.findOneOrFail({
         where: { id: surveyId },
+        relations: ['user'],
       });
-
+      // 설문지 생성자만 삭제가능  (생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (survey.userId !== user.id) {
+        throw new ForbiddenException(
+          '설문지를 생성한 본인만 삭제가 가능합니다.',
+        );
+      }
       await this.surveyRepository.remove(survey);
       return new EntityWithId(surveyId);
     } catch (error) {

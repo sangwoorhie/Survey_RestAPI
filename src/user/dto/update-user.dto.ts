@@ -4,6 +4,9 @@ import { IsString, Matches, MinLength, MaxLength } from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
+  currentPassword: string;
+
+  @IsString()
   @MinLength(4)
   @MaxLength(20)
   @Matches(/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{4,}$/, {

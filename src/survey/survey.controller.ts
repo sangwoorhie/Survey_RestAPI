@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
 import { CompleteSurveyDto } from './dto/complete-survey.dto';
 import { EntityWithId } from 'src/survey.type';
+import { CurrentUser } from 'src/auth/current.user.decorator';
+import { User } from 'src/user/entities/user.entity';
+import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
 
 @Controller('surveys')
 export class SurveyController {
@@ -19,8 +23,12 @@ export class SurveyController {
 
   // 설문지 생성
   @Post()
-  async createSurvey(@Body() createDto: CreateSurveyDto) {
-    return await this.surveyService.createSurvey(createDto);
+  @UseGuards(AuthGuardJwt)
+  async createSurvey(
+    @Body() createDto: CreateSurveyDto,
+    @CurrentUser() user: User,
+  ) {
+    return await this.surveyService.createSurvey(createDto, user);
   }
 
   // 설문지 완료
@@ -28,8 +36,9 @@ export class SurveyController {
   async completeSurvey(
     @Param('surveyId') surveyId: number,
     @Body() completeDto: CompleteSurveyDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.surveyService.completeSurvey(surveyId, completeDto);
+    return await this.surveyService.completeSurvey(surveyId, completeDto, user);
   }
 
   // 설문지 목록조회
@@ -55,14 +64,18 @@ export class SurveyController {
   async updateSurvey(
     @Param('surveyId') surveyId: number,
     @Body() updateDto: UpdateSurveyDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.surveyService.updateSurvey(surveyId, updateDto);
+    return await this.surveyService.updateSurvey(surveyId, updateDto, user);
   }
 
   // 설문지 삭제
   @Delete('/:surveyId')
-  async deleteSurvey(@Param('surveyId') surveyId: number) {
-    await this.surveyService.deleteSurvey(surveyId);
+  async deleteSurvey(
+    @Param('surveyId') surveyId: number,
+    @CurrentUser() user: User,
+  ) {
+    await this.surveyService.deleteSurvey(surveyId, user);
     return new EntityWithId(surveyId);
   }
 }

@@ -13,6 +13,8 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './current.user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { AuthGuardLocal } from './guards/auth.guard.local';
+import { AuthGuardJwt } from './guards/auth.guard.jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +22,7 @@ export class AuthController {
 
   // 로그인
   @Post('/login')
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuardLocal)
   async login(@CurrentUser() user: User) {
     return {
       userId: user.id,
@@ -30,7 +32,7 @@ export class AuthController {
 
   // 내정보 보기
   @Get('profile')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuardJwt)
   async getProfile(@CurrentUser() user: User) {
     return await user;
   }

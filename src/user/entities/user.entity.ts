@@ -46,12 +46,11 @@ export class User {
   updatedAt: Date;
 
   // 관계설정
-  // User - Survey : N : N 관계
-  @ManyToMany(() => Survey, (surveys) => surveys.users, {
+  // User - Survey : 1 : N 관계
+  @OneToMany(() => Survey, (surveys) => surveys.user, {
     cascade: false,
   })
-  @JoinTable()
-  surveys: Survey[];
+  surveys: Promise<Survey[]>;
 
   // User - Answer : 1 : N 관계
   @OneToMany(() => Answer, (answers) => answers.user, {

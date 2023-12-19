@@ -6,8 +6,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -64,10 +66,12 @@ export class Survey {
   })
   answers: Promise<Answer[]>; // Lazy Relations
 
-  // Survey - User : N : N 관계
-  @ManyToMany(() => User, (users) => users.surveys, {
+  // Survey - User : N : 1 관계
+  @ManyToOne(() => User, (user) => user.surveys, {
     cascade: false,
   })
-  @JoinTable()
-  users: User[];
+  @JoinColumn({ name: 'userId' })
+  user: Promise<User>;
+  @Column({ nullable: true })
+  userId: number;
 }

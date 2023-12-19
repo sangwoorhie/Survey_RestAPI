@@ -43,14 +43,20 @@ export class Option {
   @ManyToOne(() => Survey, (survey) => survey.options)
   @JoinColumn({ name: 'surveyId' })
   survey: Promise<Survey>;
+  @Column({ nullable: true })
+  surveyId: number;
 
   // Options - Questions : N : 1 관계
   @ManyToOne(() => Question, (question) => question.options)
   @JoinColumn({ name: 'questionId' })
   question: Promise<Question>;
+  @Column({ nullable: true })
+  questionId: number;
 
   // Options - User : N : 1 관계
   @ManyToOne(() => User, (user) => user.options)
   @JoinColumn({ name: 'userId' })
   user: Promise<User>;
+  @Column({ nullable: true })
+  userId: number;
 }

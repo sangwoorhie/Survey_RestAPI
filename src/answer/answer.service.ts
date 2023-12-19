@@ -3,6 +3,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
@@ -13,6 +14,7 @@ import { Question } from 'src/question/entities/question.entity';
 import { OptionService } from 'src/option/option.service';
 import { Answer } from './entities/answer.entity';
 import { EntityWithId } from 'src/survey.type';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AnswerService {
@@ -32,8 +34,12 @@ export class AnswerService {
     surveyId: number,
     questionId: number,
     createDto: CreateAnswerDto,
+    user: User,
   ): Promise<Answer> {
     try {
+      if (user.status !== 'student') {
+        throw new UnauthorizedException('학생만 답안을 생성할 수 있습니다.');
+      }
       const question = await this.questionRepository.findOne({
         where: {
           survey: { id: surveyId },
@@ -56,6 +62,7 @@ export class AnswerService {
       });
 
       const create = this.answerRepository.create({
+        userId: user.id,
         surveyId,
         questionId,
         answerNumber,
