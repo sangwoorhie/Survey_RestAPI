@@ -181,6 +181,7 @@ export class QuestionService {
         },
         relations: ['user'],
       });
+
       // 문항 생성자만 삭제가능 (생성자가 선생님이라는것은 생성시 이미 검증됨)
       if (question.userId !== user.id) {
         throw new ForbiddenException('문항을 생성한 본인만 삭제가 가능합니다.');

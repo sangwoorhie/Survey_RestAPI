@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -38,7 +39,7 @@ export class OptionService {
     try {
       if (user.status !== 'teacher') {
         throw new UnauthorizedException(
-          '선생님만 설문지를 생성할 수 있습니다.',
+          '선생님만 선택지를 생성할 수 있습니다.',
         );
       }
       await this.questionRepository.findOneOrFail({
@@ -135,6 +136,7 @@ export class OptionService {
     questionId: number,
     optionId: number,
     updateDto: UpdateOptionDto,
+    user: User,
   ): Promise<Option> {
     try {
       const option = await this.optionRepository.findOneOrFail({
@@ -143,7 +145,14 @@ export class OptionService {
           question: { id: questionId },
           id: optionId,
         },
+        relations: ['user'],
       });
+      // 선택지 생성자만 수정가능, (선택지 생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (option.userId !== user.id) {
+        throw new ForbiddenException(
+          '선택지를 생성한 본인만 수정이 가능합니다.',
+        );
+      }
 
       const existContent = await this.optionRepository.findOne({
         where: {
@@ -184,6 +193,7 @@ export class OptionService {
     surveyId: number,
     questionId: number,
     optionId: number,
+    user: User,
   ): Promise<EntityWithId> {
     try {
       const option = await this.optionRepository.findOne({
@@ -192,7 +202,15 @@ export class OptionService {
           question: { id: questionId },
           id: optionId,
         },
+        relations: ['user'],
       });
+
+      // 선택지 생성자만 삭제가능 (생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (option.userId !== user.id) {
+        throw new ForbiddenException(
+          '선택지를 생성한 본인만 삭제가 가능합니다.',
+        );
+      }
       await this.optionRepository.remove(option);
       return new EntityWithId(optionId);
     } catch (error) {

@@ -63,12 +63,14 @@ export class OptionController {
     @Param('questionId') questionId: number,
     @Param('optionId') optionId: number,
     @Body() updateDto: UpdateOptionDto,
+    @CurrentUser() user: User,
   ) {
     return await this.optionService.updateOption(
       surveyId,
       questionId,
       optionId,
       updateDto,
+      user,
     );
   }
 
@@ -78,8 +80,9 @@ export class OptionController {
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
     @Param('optionId') optionId: number,
+    @CurrentUser() user: User,
   ) {
-    await this.optionService.deleteOption(surveyId, questionId, optionId);
+    await this.optionService.deleteOption(surveyId, questionId, optionId, user);
     return new EntityWithId(optionId);
   }
 }

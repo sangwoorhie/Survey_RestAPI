@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -142,6 +143,7 @@ export class AnswerService {
     questionId: number,
     answerId: number,
     updateDto: UpdateAnswerDto,
+    user: User,
   ): Promise<Answer> {
     try {
       const question = await this.questionRepository.findOne({
@@ -156,8 +158,12 @@ export class AnswerService {
           question: { id: questionId },
           id: answerId,
         },
+        relations: ['user'],
       });
-
+      // 답안 생성자만 수정가능, (답안 생성자가 학생이라는것은 생성시 이미 검증됨)
+      if (answer.userId !== user.id) {
+        throw new ForbiddenException('답안을 작성한 본인만 수정이 가능합니다.');
+      }
       const survey = await this.surveyRepository.findOne({
         where: {
           id: surveyId,
@@ -205,6 +211,7 @@ export class AnswerService {
     surveyId: number,
     questionId: number,
     answerId: number,
+    user: User,
   ): Promise<EntityWithId> {
     try {
       const survey = await this.surveyRepository.findOne({
@@ -225,7 +232,12 @@ export class AnswerService {
           question: { id: questionId },
           id: answerId,
         },
+        relations: ['user'],
       });
+      // 답안 생성자만 삭제가능, (답안 생성자가 학생이라는것은 생성시 이미 검증됨)
+      if (answer.userId !== user.id) {
+        throw new ForbiddenException('답안을 작성한 본인만 삭제가 가능합니다.');
+      }
       // 답변 삭제된 문항 상태 false로 변경 및 0점처리
       const remove = await this.answerRepository.remove(answer);
       if (remove) {

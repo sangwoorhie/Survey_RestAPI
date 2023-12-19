@@ -63,12 +63,14 @@ export class AnswerController {
     @Param('questionId') questionId: number,
     @Param('answerId') answerId: number,
     @Body() updateDto: UpdateAnswerDto,
+    @CurrentUser() user: User,
   ) {
     return await this.answerService.updateAnswer(
       surveyId,
       questionId,
       answerId,
       updateDto,
+      user,
     );
   }
 
@@ -78,8 +80,9 @@ export class AnswerController {
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
     @Param('optionId') answerId: number,
+    @CurrentUser() user: User,
   ) {
-    await this.answerService.deleteAnswer(surveyId, questionId, answerId);
+    await this.answerService.deleteAnswer(surveyId, questionId, answerId, user);
     return new EntityWithId(answerId);
   }
 }
