@@ -70,7 +70,4 @@ export class Survey {
   })
   @JoinTable()
   users: User[];
-
-  @Column({ type: 'int', nullable: true })
-  userId: number;
 }

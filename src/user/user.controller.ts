@@ -17,10 +17,7 @@ import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   // 회원가입
   @Post('/signup')

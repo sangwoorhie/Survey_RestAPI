@@ -12,6 +12,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity({ schema: 'Question', name: 'Survey_RestAPI' })
 export class Question {
@@ -20,9 +21,6 @@ export class Question {
   }
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ type: 'int', nullable: false })
-  surveyId: number;
 
   @Column({ type: 'int', nullable: false })
   questionNumber: number;
@@ -63,5 +61,11 @@ export class Question {
   @OneToOne(() => Answer, (answer) => answer.question, {
     cascade: false,
   })
+  @JoinColumn({ name: 'answerId' })
   answer: Answer;
+
+  // Question - User : N : 1 관계
+  @ManyToOne(() => User, (user) => user.questions)
+  @JoinColumn({ name: 'userId' })
+  user: Promise<User>;
 }

@@ -18,12 +18,6 @@ export class Answer {
   id: number;
 
   @Column({ type: 'int', nullable: false })
-  surveyId: number;
-
-  @Column({ type: 'int', nullable: false })
-  questionId: number;
-
-  @Column({ type: 'int', nullable: false })
   answerNumber: number;
 
   @CreateDateColumn({ name: 'createdAt', type: 'timestamp' })

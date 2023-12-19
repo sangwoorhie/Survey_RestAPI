@@ -1,5 +1,6 @@
 import { Question } from 'src/question/entities/question.entity';
 import { Survey } from 'src/survey/entities/survey.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -18,12 +19,6 @@ export class Option {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ type: 'int', nullable: false })
-  surveyId: number;
-
-  @Column({ type: 'int', nullable: false })
-  questionId: number;
 
   @Column({ type: 'int' })
   optionNumber: number;
@@ -53,4 +48,9 @@ export class Option {
   @ManyToOne(() => Question, (question) => question.options)
   @JoinColumn({ name: 'questionId' })
   question: Promise<Question>;
+
+  // Options - User : N : 1 관계
+  @ManyToOne(() => User, (user) => user.options)
+  @JoinColumn({ name: 'userId' })
+  user: Promise<User>;
 }

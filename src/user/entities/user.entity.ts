@@ -1,5 +1,6 @@
 import { Answer } from 'src/answer/entities/answer.entity';
 import { Survey } from 'src/survey/entities/survey.entity';
+import { Option } from 'src/option/entities/option.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Status } from '../userinfo';
+import { Question } from 'src/question/entities/question.entity';
 
 @Entity({ schema: 'User', name: 'Survey_RestAPI' })
 export class User {
@@ -56,4 +58,16 @@ export class User {
     cascade: false,
   })
   answers: Promise<Answer[]>; // Lazy Relations
+
+  // User - Option : 1 : N 관계
+  @OneToMany(() => Option, (options) => options.user, {
+    cascade: true,
+  })
+  options: Promise<Option[]>;
+
+  // User - Question : 1 : N 관계
+  @OneToMany(() => Question, (questions) => questions.user, {
+    cascade: true,
+  })
+  questions: Promise<Question[]>;
 }
