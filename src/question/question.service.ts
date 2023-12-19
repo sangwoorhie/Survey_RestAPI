@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -125,6 +126,7 @@ export class QuestionService {
     surveyId: number,
     questionId: number,
     updateDto: UpdateQuestionDto,
+    user: User,
   ): Promise<Question> {
     try {
       const question = await this.questionRepository.findOneOrFail({
@@ -132,7 +134,12 @@ export class QuestionService {
           survey: { id: surveyId },
           id: questionId,
         },
+        relations: ['user'],
       });
+      // 문항 생성자만 수정가능, (문항 생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (question.userId !== user.id) {
+        throw new ForbiddenException('문항을 생성한 본인만 수정이 가능합니다.');
+      }
 
       const existContent = await this.questionRepository.findOne({
         where: {
@@ -164,6 +171,7 @@ export class QuestionService {
   async deleteQuestion(
     surveyId: number,
     questionId: number,
+    user: User,
   ): Promise<EntityWithId> {
     try {
       const question = await this.questionRepository.findOneOrFail({
@@ -171,7 +179,12 @@ export class QuestionService {
           survey: { id: surveyId },
           id: questionId,
         },
+        relations: ['user'],
       });
+      // 문항 생성자만 삭제가능 (생성자가 선생님이라는것은 생성시 이미 검증됨)
+      if (question.userId !== user.id) {
+        throw new ForbiddenException('문항을 생성한 본인만 삭제가 가능합니다.');
+      }
       await this.questionRepository.remove(question);
       return new EntityWithId(questionId);
     } catch (error) {

@@ -52,11 +52,13 @@ export class QuestionController {
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
     @Body() updateDto: UpdateQuestionDto,
+    @CurrentUser() user: User,
   ) {
     return await this.questionService.updateQuestion(
       surveyId,
       questionId,
       updateDto,
+      user,
     );
   }
 
@@ -65,8 +67,9 @@ export class QuestionController {
   async deleteQuestion(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
+    @CurrentUser() user: User,
   ) {
-    await this.questionService.deleteQuestion(surveyId, questionId);
+    await this.questionService.deleteQuestion(surveyId, questionId, user);
     return new EntityWithId(questionId);
   }
 }
