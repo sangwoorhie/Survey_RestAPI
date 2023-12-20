@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -27,8 +29,8 @@ export class QuestionController {
   @ApiOperation({ summary: '문항 생성' })
   @UseGuards(AuthGuardJwt)
   async createQuestion(
-    @Param('surveyId') surveyId: number,
-    @Body() createDto: CreateQuestionDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Body(new ValidationPipe()) createDto: CreateQuestionDto,
     @CurrentUser() user: User,
   ) {
     return await this.questionService.createQuestion(surveyId, createDto, user);
@@ -37,7 +39,7 @@ export class QuestionController {
   // 문항 목록조회
   @Get('/:surveyId/questions')
   @ApiOperation({ summary: '문항 목록조회' })
-  async getQuestions(@Param('surveyId') surveyId: number) {
+  async getQuestions(@Param('surveyId', ParseIntPipe) surveyId: number) {
     return await this.questionService.getQuestions(surveyId);
   }
 
@@ -45,8 +47,8 @@ export class QuestionController {
   @Get('/:surveyId/questions/:questionId')
   @ApiOperation({ summary: '문항 상세조회' })
   async getQuestion(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
   ) {
     return await this.questionService.getQuestion(surveyId, questionId);
   }
@@ -55,9 +57,9 @@ export class QuestionController {
   @Patch('/:surveyId/questions/:questionId')
   @ApiOperation({ summary: '문항 수정' })
   async updateQuestion(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Body() updateDto: UpdateQuestionDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Body(new ValidationPipe()) updateDto: UpdateQuestionDto,
     @CurrentUser() user: User,
   ) {
     return await this.questionService.updateQuestion(
@@ -72,8 +74,8 @@ export class QuestionController {
   @Delete('/:surveyId/questions/:questionId')
   @ApiOperation({ summary: '문항 삭제' })
   async deleteQuestion(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
     @CurrentUser() user: User,
   ) {
     await this.questionService.deleteQuestion(surveyId, questionId, user);

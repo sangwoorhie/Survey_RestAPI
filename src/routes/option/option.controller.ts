@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { OptionService } from './option.service';
 import { CreateOptionDto } from './dto/create-option.dto';
@@ -27,9 +29,9 @@ export class OptionController {
   @ApiOperation({ summary: '선택지 생성' })
   @UseGuards(AuthGuardJwt)
   async createOption(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Body() createDto: CreateOptionDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Body(new ValidationPipe()) createDto: CreateOptionDto,
     @CurrentUser() user: User,
   ) {
     return await this.optionService.createOption(
@@ -44,8 +46,8 @@ export class OptionController {
   @Get('/:surveyId/questions/:questionId/options')
   @ApiOperation({ summary: '선택지 목록조회' })
   async getOptions(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
   ) {
     return await this.optionService.getOptions(surveyId, questionId);
   }
@@ -54,9 +56,9 @@ export class OptionController {
   @Get('/:surveyId/questions/:questionId/options/:optionId')
   @ApiOperation({ summary: '선택지 상세조회' })
   async getOption(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('optionId') optionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
   ) {
     return await this.optionService.getOption(surveyId, questionId, optionId);
   }
@@ -65,10 +67,10 @@ export class OptionController {
   @Patch('/:surveyId/questions/:questionId/options/:optionId')
   @ApiOperation({ summary: '선택지 수정' })
   async updateOption(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('optionId') optionId: number,
-    @Body() updateDto: UpdateOptionDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
+    @Body(new ValidationPipe()) updateDto: UpdateOptionDto,
     @CurrentUser() user: User,
   ) {
     return await this.optionService.updateOption(
@@ -84,9 +86,9 @@ export class OptionController {
   @Delete('/:surveyId/questions/:questionId/options/:optionId')
   @ApiOperation({ summary: '선택지 삭제' })
   async deleteOption(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('optionId') optionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
     @CurrentUser() user: User,
   ) {
     await this.optionService.deleteOption(surveyId, questionId, optionId, user);

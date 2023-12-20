@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
@@ -27,9 +29,9 @@ export class AnswerController {
   @ApiOperation({ summary: '답안 생성' })
   @UseGuards(AuthGuardJwt)
   async createAnswer(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Body() createDto: CreateAnswerDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Body(new ValidationPipe()) createDto: CreateAnswerDto,
     @CurrentUser() user: User,
   ) {
     return await this.answerService.createAnswer(
@@ -44,8 +46,8 @@ export class AnswerController {
   @Get('/:surveyId/questions/:questionId/answers')
   @ApiOperation({ summary: '답안 목록조회' })
   async getAnswers(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
   ) {
     return await this.answerService.getAnswers(surveyId, questionId);
   }
@@ -54,9 +56,9 @@ export class AnswerController {
   @Get('/:surveyId/questions/:questionId/answers/:answerId')
   @ApiOperation({ summary: '답안 상세조회' })
   async getAnswer(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('answerId') answerId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('answerId', ParseIntPipe) answerId: number,
   ) {
     return await this.answerService.getAnswer(surveyId, questionId, answerId);
   }
@@ -65,10 +67,10 @@ export class AnswerController {
   @Patch('/:surveyId/questions/:questionId/answers/:answerId')
   @ApiOperation({ summary: '답안 수정' })
   async updateAnswer(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('answerId') answerId: number,
-    @Body() updateDto: UpdateAnswerDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('answerId', ParseIntPipe) answerId: number,
+    @Body(new ValidationPipe()) updateDto: UpdateAnswerDto,
     @CurrentUser() user: User,
   ) {
     return await this.answerService.updateAnswer(
@@ -84,9 +86,9 @@ export class AnswerController {
   @Delete('/:surveyId/questions/:questionId/answers/:answerId')
   @ApiOperation({ summary: '답안 삭제' })
   async deleteAnswer(
-    @Param('surveyId') surveyId: number,
-    @Param('questionId') questionId: number,
-    @Param('optionId') answerId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param('optionId', ParseIntPipe) answerId: number,
     @CurrentUser() user: User,
   ) {
     await this.answerService.deleteAnswer(surveyId, questionId, answerId, user);

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,14 +27,14 @@ export class UserController {
   // 회원가입
   @Post('/signup')
   @ApiOperation({ summary: '회원가입' })
-  async createUser(@Body() createDto: CreateUserDto) {
+  async createUser(@Body(new ValidationPipe()) createDto: CreateUserDto) {
     return await this.userService.createUser(createDto);
   }
 
   // 이메일로 회원찾기
   @Get('/search')
   @ApiOperation({ summary: '이메일로 회원 찾기' })
-  async findUser(@Body() searchDto: SearchUserDto) {
+  async findUser(@Body(new ValidationPipe()) searchDto: SearchUserDto) {
     return await this.userService.findUser(searchDto);
   }
 
@@ -42,7 +43,7 @@ export class UserController {
   @ApiOperation({ summary: '내 정보 수정' })
   async updateUser(
     @CurrentUser() user: User,
-    @Body() updateDto: UpdateUserDto,
+    @Body(new ValidationPipe()) updateDto: UpdateUserDto,
   ) {
     return await this.userService.updateUser(user, updateDto);
   }
@@ -52,7 +53,7 @@ export class UserController {
   @ApiOperation({ summary: '회원 탈퇴' })
   async deleteUser(
     @CurrentUser() user: User,
-    @Body() deleteDto: DeleteUserDto,
+    @Body(new ValidationPipe()) deleteDto: DeleteUserDto,
   ) {
     await this.userService.deleteUser(user, deleteDto);
     return new EntityWithId(user.id);

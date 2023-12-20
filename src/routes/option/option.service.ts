@@ -11,11 +11,11 @@ import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Survey } from 'src/survey/entities/survey.entity';
-import { Question } from 'src/question/entities/question.entity';
+import { Survey } from '../survey/entities/survey.entity';
+import { Question } from '../question/entities/question.entity';
 import { Option } from './entities/option.entity';
 import { EntityWithId } from 'src/survey.type';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class OptionService {

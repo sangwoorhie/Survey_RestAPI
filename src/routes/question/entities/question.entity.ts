@@ -1,6 +1,7 @@
-import { Answer } from 'src/answer/entities/answer.entity';
-import { Survey } from 'src/survey/entities/survey.entity';
-import { Option } from 'src/option/entities/option.entity';
+import { Answer } from 'src/routes/answer/entities/answer.entity';
+import { Survey } from 'src/routes/survey/entities/survey.entity';
+import { Option } from 'src/routes/option/entities/option.entity';
+import { User } from 'src/routes/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,7 +13,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
 
 @Entity({ schema: 'Question', name: 'Survey_RestAPI' })
 export class Question {

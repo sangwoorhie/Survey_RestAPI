@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { CreateSurveyDto } from './dto/create-survey.dto';
@@ -28,7 +30,7 @@ export class SurveyController {
   @ApiOperation({ summary: '설문지 생성' })
   @UseGuards(AuthGuardJwt)
   async createSurvey(
-    @Body() createDto: CreateSurveyDto,
+    @Body(new ValidationPipe()) createDto: CreateSurveyDto,
     @CurrentUser() user: User,
   ) {
     return await this.surveyService.createSurvey(createDto, user);
@@ -38,8 +40,8 @@ export class SurveyController {
   @Post('/:surveyId')
   @ApiOperation({ summary: '설문지 완료' })
   async completeSurvey(
-    @Param('surveyId') surveyId: number,
-    @Body() completeDto: CompleteSurveyDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Body(new ValidationPipe()) completeDto: CompleteSurveyDto,
     @CurrentUser() user: User,
   ) {
     return await this.surveyService.completeSurvey(surveyId, completeDto, user);
@@ -62,7 +64,7 @@ export class SurveyController {
   // 설문지 상세조회
   @Get('/:surveyId')
   @ApiOperation({ summary: '완료 설문지 상세조회' })
-  async getSurvey(@Param('surveyId') surveyId: number) {
+  async getSurvey(@Param('surveyId', ParseIntPipe) surveyId: number) {
     return await this.surveyService.getSurvey(surveyId);
   }
 
@@ -70,8 +72,8 @@ export class SurveyController {
   @Patch('/:surveyId')
   @ApiOperation({ summary: '설문지 수정' })
   async updateSurvey(
-    @Param('surveyId') surveyId: number,
-    @Body() updateDto: UpdateSurveyDto,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Body(new ValidationPipe()) updateDto: UpdateSurveyDto,
     @CurrentUser() user: User,
   ) {
     return await this.surveyService.updateSurvey(surveyId, updateDto, user);
@@ -81,7 +83,7 @@ export class SurveyController {
   @Delete('/:surveyId')
   @ApiOperation({ summary: '설문지 삭제' })
   async deleteSurvey(
-    @Param('surveyId') surveyId: number,
+    @Param('surveyId', ParseIntPipe) surveyId: number,
     @CurrentUser() user: User,
   ) {
     await this.surveyService.deleteSurvey(surveyId, user);
