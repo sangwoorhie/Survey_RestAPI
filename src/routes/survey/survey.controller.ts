@@ -20,7 +20,7 @@ import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PageReqDto } from 'src/common/pagination.dto';
+import { PageReqDto } from 'src/common/dto/pagination.dto';
 
 @Controller('surveys')
 @ApiTags('api')

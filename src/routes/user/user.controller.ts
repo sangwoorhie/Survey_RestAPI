@@ -10,16 +10,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthService } from 'src/auth/auth.service';
 import { SearchUserDto } from './dto/search-user.dto';
 import { User } from './entities/user.entity';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { EntityWithId } from 'src/survey.type';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PageReqDto } from 'src/common/pagination.dto';
+import { PageReqDto } from 'src/common/dto/pagination.dto';
 
 @Controller('user')
 @ApiTags('api')
@@ -27,21 +25,14 @@ import { PageReqDto } from 'src/common/pagination.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // 회원가입
-  @Post('/signup')
-  @ApiOperation({ summary: '회원가입' })
-  async createUser(@Body(new ValidationPipe()) createDto: CreateUserDto) {
-    return await this.userService.createUser(createDto);
-  }
-
   // 이메일로 회원찾기
   @Get('/search')
   @ApiOperation({ summary: '이메일로 회원 찾기' })
   async findUser(
     @Query() { page, size }: PageReqDto,
-    @Body(new ValidationPipe()) searchDto: SearchUserDto,
+    @Body(new ValidationPipe()) { email }: SearchUserDto,
   ) {
-    return await this.userService.findUser(searchDto);
+    return await this.userService.findUser(email);
   }
 
   // 내정보 수정

@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsInt } from 'class-validator';
 
@@ -12,4 +12,14 @@ export class PageReqDto {
   @Transform((param) => Number(param.value))
   @IsInt()
   size?: number = 20;
+}
+
+export class PageResDto<TData> {
+  @ApiProperty()
+  page: number;
+
+  @ApiProperty()
+  size: number;
+
+  items: TData[];
 }

@@ -8,12 +8,14 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Status } from '../userinfo';
 import { Question } from 'src/routes/question/entities/question.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { RefreshToken } from 'src/auth/entities/refreshToken.entity';
 
 @Entity({ schema: 'User', name: 'Survey_RestAPI' })
 export class User {
@@ -74,4 +76,8 @@ export class User {
     cascade: true,
   })
   questions: Promise<Question[]>;
+
+  // User - RefreshToken : 1 : 1 관계
+  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshToken: RefreshToken;
 }

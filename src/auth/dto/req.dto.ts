@@ -1,15 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  Matches,
   MinLength,
   MaxLength,
-  IsEnum,
   IsEmail,
+  Matches,
+  IsEnum,
+  IsNotEmpty,
 } from 'class-validator';
-import { Status } from '../userinfo';
-import { ApiProperty } from '@nestjs/swagger';
+import { Status } from 'src/routes/user/userinfo';
 
-export class CreateUserDto {
+// Sign-Up(회원가입)
+export class SignUpReqDto {
   @ApiProperty({
     required: true,
     description: '이메일',
@@ -69,4 +71,20 @@ export class CreateUserDto {
     message: `학생일 경우 'student', 교사일 경우 'teacher'를 입력해주세요.`,
   })
   status: Status;
+}
+
+// Sign-In(로그인)
+export class SignInReqDto {
+  @ApiProperty({ required: true, description: '이메일' })
+  @IsNotEmpty({ message: '이메일을 입력해주세요.' })
+  @IsString()
+  @IsEmail()
+  @MaxLength(60)
+  email: string;
+
+  @ApiProperty({ required: true, description: '비밀번호' })
+  @IsNotEmpty({ message: '비밀번호를 입력해주세요.' })
+  @IsString()
+  @Matches(/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{4,}$/)
+  password: string;
 }

@@ -1,9 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { SignUpReqDto } from 'src/auth/dto/req.dto';
 import { IsString, Matches, MinLength, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto extends PartialType(SignUpReqDto) {
   @ApiProperty({
     required: true,
     description: '현재 비밀번호',
