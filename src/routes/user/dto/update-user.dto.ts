@@ -1,11 +1,22 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 import { IsString, Matches, MinLength, MaxLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @ApiProperty({
+    required: true,
+    description: '현재 비밀번호',
+    example: 'Password123',
+  })
   @IsString()
   currentPassword: string;
 
+  @ApiProperty({
+    required: true,
+    description: '변경 비밀번호',
+    example: 'pAssword456',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
@@ -15,6 +26,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   })
   newPassword: string;
 
+  @ApiProperty({
+    required: true,
+    description: '이름',
+    example: 'John',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(20)

@@ -7,8 +7,14 @@ import {
   IsEmail,
 } from 'class-validator';
 import { Status } from '../userinfo';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @ApiProperty({
+    required: true,
+    description: '이메일',
+    example: 'nestjs@naver.com',
+  })
   @IsEmail()
   @MinLength(4)
   @MaxLength(20)
@@ -20,6 +26,11 @@ export class CreateUserDto {
   )
   email: string;
 
+  @ApiProperty({
+    required: true,
+    description: '비밀번호',
+    example: 'Password123',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
@@ -29,16 +40,31 @@ export class CreateUserDto {
   })
   password: string;
 
+  @ApiProperty({
+    required: true,
+    description: '확인 비밀번호',
+    example: 'Password123',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
   confirmPassword: string;
 
+  @ApiProperty({
+    required: true,
+    description: '이름',
+    example: 'Jake',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
   name: string;
 
+  @ApiProperty({
+    required: true,
+    description: '사용자 신분',
+    example: 'teacher',
+  })
   @IsEnum(Status, {
     message: `학생일 경우 'student', 교사일 경우 'teacher'를 입력해주세요.`,
   })

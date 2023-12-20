@@ -14,7 +14,7 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  // swagger
+  // Swagger
   const config = new DocumentBuilder()
     .setTitle('Survey Project')
     .setDescription('Survey API description')
