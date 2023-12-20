@@ -9,6 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { CreateSurveyDto } from './dto/create-survey.dto';
@@ -19,6 +20,7 @@ import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PageReqDto } from 'src/common/pagination.dto';
 
 @Controller('surveys')
 @ApiTags('api')
@@ -50,14 +52,14 @@ export class SurveyController {
   // 설문지 목록조회
   @Get()
   @ApiOperation({ summary: '설문지 목록조회' })
-  async getSurveys() {
+  async getSurveys(@Query() { page, size }: PageReqDto) {
     return await this.surveyService.getSurveys();
   }
 
   // 완료 설문지 목록조회
   @Get('/done')
   @ApiOperation({ summary: '완료 설문지 목록조회' })
-  async getDoneSurveys() {
+  async getDoneSurveys(@Query() { page, size }: PageReqDto) {
     return await this.surveyService.getDoneSurveys();
   }
 

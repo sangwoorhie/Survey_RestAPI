@@ -9,6 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -18,6 +19,7 @@ import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { User } from '../user/entities/user.entity';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PageReqDto } from 'src/common/pagination.dto';
 
 @Controller('survey')
 @ApiTags('api')
@@ -39,7 +41,10 @@ export class QuestionController {
   // 문항 목록조회
   @Get('/:surveyId/questions')
   @ApiOperation({ summary: '문항 목록조회' })
-  async getQuestions(@Param('surveyId', ParseIntPipe) surveyId: number) {
+  async getQuestions(
+    @Param('surveyId', ParseIntPipe) surveyId: number,
+    @Query() { page, size }: PageReqDto,
+  ) {
     return await this.questionService.getQuestions(surveyId);
   }
 

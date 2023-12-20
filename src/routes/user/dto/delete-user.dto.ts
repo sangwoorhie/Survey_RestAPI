@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 export class DeleteUserDto {
   @ApiProperty({
     required: true,
-    description: 'password',
+    description: '비밀번호',
     example: 'Password123',
   })
   @IsString()

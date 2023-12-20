@@ -9,6 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
@@ -18,6 +19,7 @@ import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PageReqDto } from 'src/common/pagination.dto';
 
 @Controller('surveys')
 @ApiTags('api')
@@ -48,6 +50,7 @@ export class AnswerController {
   async getAnswers(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
+    @Query() { page, size }: PageReqDto,
   ) {
     return await this.answerService.getAnswers(surveyId, questionId);
   }

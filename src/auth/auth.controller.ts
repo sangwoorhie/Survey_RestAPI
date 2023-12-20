@@ -14,6 +14,7 @@ import { CurrentUser } from './current.user.decorator';
 import { User } from 'src/routes/user/entities/user.entity';
 import { AuthGuardJwt } from './guards/jwt-auth.guard';
 import { AuthGuardLocal } from './guards/local-auth.guard';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +22,7 @@ export class AuthController {
 
   // 로그인
   @Post('/login')
+  @ApiOperation({ summary: '로그인' })
   @UseGuards(AuthGuardLocal)
   async login(@CurrentUser() user: User) {
     return {

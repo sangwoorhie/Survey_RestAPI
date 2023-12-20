@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,10 +18,12 @@ import { User } from './entities/user.entity';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { EntityWithId } from 'src/survey.type';
 import { CurrentUser } from 'src/auth/current.user.decorator';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PageReqDto } from 'src/common/pagination.dto';
 
 @Controller('user')
 @ApiTags('api')
+@ApiExtraModels(PageReqDto)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -34,7 +37,10 @@ export class UserController {
   // 이메일로 회원찾기
   @Get('/search')
   @ApiOperation({ summary: '이메일로 회원 찾기' })
-  async findUser(@Body(new ValidationPipe()) searchDto: SearchUserDto) {
+  async findUser(
+    @Query() { page, size }: PageReqDto,
+    @Body(new ValidationPipe()) searchDto: SearchUserDto,
+  ) {
     return await this.userService.findUser(searchDto);
   }
 

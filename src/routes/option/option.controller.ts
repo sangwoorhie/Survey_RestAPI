@@ -9,6 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { OptionService } from './option.service';
 import { CreateOptionDto } from './dto/create-option.dto';
@@ -18,6 +19,7 @@ import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PageReqDto } from 'src/common/pagination.dto';
 
 @Controller('surveys')
 @ApiTags('api')
@@ -48,6 +50,7 @@ export class OptionController {
   async getOptions(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
+    @Query() { page, size }: PageReqDto,
   ) {
     return await this.optionService.getOptions(surveyId, questionId);
   }
