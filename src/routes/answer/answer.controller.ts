@@ -14,14 +14,17 @@ import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { EntityWithId } from 'src/survey.type';
 import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
 import { CurrentUser } from 'src/auth/current.user.decorator';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('surveys')
+@ApiTags('api')
 export class AnswerController {
   constructor(private readonly answerService: AnswerService) {}
 
   // 답안 생성
   @Post('/:surveyId/questions/:questionId/answers')
+  @ApiOperation({ summary: '답안 생성' })
   @UseGuards(AuthGuardJwt)
   async createAnswer(
     @Param('surveyId') surveyId: number,
@@ -39,6 +42,7 @@ export class AnswerController {
 
   // 답안 목록조회
   @Get('/:surveyId/questions/:questionId/answers')
+  @ApiOperation({ summary: '답안 목록조회' })
   async getAnswers(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
@@ -48,6 +52,7 @@ export class AnswerController {
 
   // 답안 상세조회
   @Get('/:surveyId/questions/:questionId/answers/:answerId')
+  @ApiOperation({ summary: '답안 상세조회' })
   async getAnswer(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
@@ -58,6 +63,7 @@ export class AnswerController {
 
   // 답안 수정
   @Patch('/:surveyId/questions/:questionId/answers/:answerId')
+  @ApiOperation({ summary: '답안 수정' })
   async updateAnswer(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,
@@ -76,6 +82,7 @@ export class AnswerController {
 
   // 답안 삭제
   @Delete('/:surveyId/questions/:questionId/answers/:answerId')
+  @ApiOperation({ summary: '답안 삭제' })
   async deleteAnswer(
     @Param('surveyId') surveyId: number,
     @Param('questionId') questionId: number,

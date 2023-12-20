@@ -16,25 +16,30 @@ import { User } from './entities/user.entity';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { EntityWithId } from 'src/survey.type';
 import { CurrentUser } from 'src/auth/current.user.decorator';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('api')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   // 회원가입
   @Post('/signup')
+  @ApiOperation({ summary: '회원가입' })
   async createUser(@Body() createDto: CreateUserDto) {
     return await this.userService.createUser(createDto);
   }
 
   // 이메일로 회원찾기
   @Get('/search')
+  @ApiOperation({ summary: '이메일로 회원 찾기' })
   async findUser(@Body() searchDto: SearchUserDto) {
     return await this.userService.findUser(searchDto);
   }
 
   // 내정보 수정
   @Patch()
+  @ApiOperation({ summary: '내 정보 수정' })
   async updateUser(
     @CurrentUser() user: User,
     @Body() updateDto: UpdateUserDto,
@@ -44,6 +49,7 @@ export class UserController {
 
   // 회원탈퇴
   @Delete()
+  @ApiOperation({ summary: '회원 탈퇴' })
   async deleteUser(
     @CurrentUser() user: User,
     @Body() deleteDto: DeleteUserDto,

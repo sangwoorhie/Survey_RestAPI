@@ -24,8 +24,6 @@ export class SurveyService {
     private readonly surveyRepository: Repository<Survey>,
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   // 설문지 생성
@@ -79,6 +77,7 @@ export class SurveyService {
       // 설문지없는경우 에러반환
       const survey = await this.surveyRepository.findOneOrFail({
         where: { id: surveyId },
+        relations: ['user'],
       });
       // 설문지 완료는 학생만 가능함
       if (user.status !== 'student') {
@@ -229,7 +228,7 @@ export class SurveyService {
         where: { id: surveyId },
         relations: ['user'],
       });
-      // 설문지 생성자만 삭제가능  (생성자가 선생님이라는것은 생성시 이미 검증됨)
+      // 설문지 생성자만 삭제가능 (생성자가 선생님이라는것은 생성시 이미 검증됨)
       if (survey.userId !== user.id) {
         throw new ForbiddenException(
           '설문지를 생성한 본인만 삭제가 가능합니다.',
