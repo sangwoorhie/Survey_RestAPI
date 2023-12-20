@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { Status } from '../userinfo';
 import { Question } from 'src/routes/question/entities/question.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ schema: 'User', name: 'Survey_RestAPI' })
 export class User {
@@ -22,20 +23,24 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ description: 'E-mail' })
   @Column({
     type: 'varchar',
     unique: true,
   })
   email: string;
 
+  @ApiProperty({ description: '비밀번호' })
   @Column({ type: 'varchar', length: 30 })
   password: string;
 
+  @ApiProperty({ description: '이름' })
   @Column({
     type: 'varchar',
   })
   name: string;
 
+  @ApiProperty({ description: '사용자 신분', example: 'teacher' })
   @Column({ type: 'enum', enum: Status, default: Status.TEACHER })
   status: Status;
 

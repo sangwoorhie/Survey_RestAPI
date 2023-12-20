@@ -10,11 +10,10 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './current.user.decorator';
-import { User } from 'src/user/entities/user.entity';
-import { AuthGuardLocal } from './guards/auth.guard.local';
-import { AuthGuardJwt } from './guards/auth.guard.jwt';
+import { User } from 'src/routes/user/entities/user.entity';
+import { AuthGuardJwt } from './guards/jwt-auth.guard';
+import { AuthGuardLocal } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {

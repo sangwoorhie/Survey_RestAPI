@@ -1,15 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { EntityNotFoundErrorFilter } from './entity-not-founc-error.filter';
+import { EntityNotFoundErrorFilter } from './exceptions/entity-not-found-error.filter';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './exceptions/http.exceptions';
 
 async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new EntityNotFoundErrorFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

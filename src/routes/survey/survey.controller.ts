@@ -17,7 +17,7 @@ import { CompleteSurveyDto } from './dto/complete-survey.dto';
 import { EntityWithId } from 'src/survey.type';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
-import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
+import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('surveys')
@@ -70,6 +70,7 @@ export class SurveyController {
 
   // 설문지 수정
   @Patch('/:surveyId')
+  @UseGuards(AuthGuardJwt)
   @ApiOperation({ summary: '설문지 수정' })
   async updateSurvey(
     @Param('surveyId', ParseIntPipe) surveyId: number,
@@ -81,6 +82,7 @@ export class SurveyController {
 
   // 설문지 삭제
   @Delete('/:surveyId')
+  @UseGuards(AuthGuardJwt)
   @ApiOperation({ summary: '설문지 삭제' })
   async deleteSurvey(
     @Param('surveyId', ParseIntPipe) surveyId: number,

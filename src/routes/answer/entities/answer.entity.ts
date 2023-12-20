@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Question } from 'src/routes/question/entities/question.entity';
 import { Survey } from 'src/routes/survey/entities/survey.entity';
 import { User } from 'src/routes/user/entities/user.entity';
@@ -17,6 +18,7 @@ export class Answer {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ description: '답안번호' })
   @Column({ type: 'int', nullable: false })
   answerNumber: number;
 

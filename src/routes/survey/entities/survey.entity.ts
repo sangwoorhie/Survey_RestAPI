@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Answer } from 'src/routes/answer/entities/answer.entity';
 import { Option } from 'src/routes/option/entities/option.entity';
 import { Question } from 'src/routes/question/entities/question.entity';
@@ -20,24 +21,28 @@ export class Survey {
   @PrimaryColumn()
   id: number;
 
+  @ApiProperty({ description: '설문지 제목' })
   @Column({
     type: 'varchar',
     nullable: false,
   })
   title: string;
 
+  @ApiProperty({ description: '설문지 내용' })
   @Column({
     type: 'varchar',
     nullable: false,
   })
   description: string;
 
+  @ApiProperty({ description: '설문지 완료여부' })
   @Column({
     type: 'boolean',
     default: false,
   })
   isDone: boolean;
 
+  @ApiProperty({ description: '설문지 총점' })
   @Column({ default: 0 })
   totalScore: number;
 

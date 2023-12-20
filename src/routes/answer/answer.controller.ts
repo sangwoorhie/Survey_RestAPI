@@ -14,7 +14,7 @@ import { AnswerService } from './answer.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { EntityWithId } from 'src/survey.type';
-import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
+import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -66,6 +66,7 @@ export class AnswerController {
   // 답안 수정
   @Patch('/:surveyId/questions/:questionId/answers/:answerId')
   @ApiOperation({ summary: '답안 수정' })
+  @UseGuards(AuthGuardJwt)
   async updateAnswer(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
@@ -85,6 +86,7 @@ export class AnswerController {
   // 답안 삭제
   @Delete('/:surveyId/questions/:questionId/answers/:answerId')
   @ApiOperation({ summary: '답안 삭제' })
+  @UseGuards(AuthGuardJwt)
   async deleteAnswer(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,

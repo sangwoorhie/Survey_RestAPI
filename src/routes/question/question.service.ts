@@ -10,11 +10,11 @@ import {
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Survey } from 'src/survey/entities/survey.entity';
 import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 import { EntityWithId } from 'src/survey.type';
-import { User } from 'src/user/entities/user.entity';
+import { Survey } from '../survey/entities/survey.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class QuestionService {

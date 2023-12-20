@@ -12,9 +12,9 @@ import { CompleteSurveyDto } from './dto/complete-survey.dto';
 import { Survey } from './entities/survey.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Question } from 'src/question/entities/question.entity';
 import { EntityWithId } from 'src/survey.type';
-import { User } from 'src/user/entities/user.entity';
+import { Question } from '../question/entities/question.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class SurveyService {

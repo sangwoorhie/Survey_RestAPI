@@ -14,7 +14,7 @@ import { OptionService } from './option.service';
 import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
 import { EntityWithId } from 'src/survey.type';
-import { AuthGuardJwt } from 'src/auth/guards/auth.guard.jwt';
+import { AuthGuardJwt } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current.user.decorator';
 import { User } from '../user/entities/user.entity';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -66,6 +66,7 @@ export class OptionController {
   // 선택지 수정
   @Patch('/:surveyId/questions/:questionId/options/:optionId')
   @ApiOperation({ summary: '선택지 수정' })
+  @UseGuards(AuthGuardJwt)
   async updateOption(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,
@@ -85,6 +86,7 @@ export class OptionController {
   // 선택지 삭제
   @Delete('/:surveyId/questions/:questionId/options/:optionId')
   @ApiOperation({ summary: '선택지 삭제' })
+  @UseGuards(AuthGuardJwt)
   async deleteOption(
     @Param('surveyId', ParseIntPipe) surveyId: number,
     @Param('questionId', ParseIntPipe) questionId: number,

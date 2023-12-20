@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ schema: 'Question', name: 'Survey_RestAPI' })
 export class Question {
@@ -22,20 +23,24 @@ export class Question {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ description: '문항 번호' })
   @Column({ type: 'int', nullable: false })
   questionNumber: number;
 
+  @ApiProperty({ description: '문항 내용' })
   @Column({
     type: 'varchar',
   })
   content: string;
 
+  @ApiProperty({ description: '문항 답변여부' })
   @Column({
     type: 'boolean',
     default: false,
   })
   isAnswered: boolean;
 
+  @ApiProperty({ description: '문항 점수' })
   @Column({ default: 0 })
   questionScore: number;
 

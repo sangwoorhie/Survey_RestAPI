@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Question } from 'src/routes/question/entities/question.entity';
 import { Survey } from 'src/routes/survey/entities/survey.entity';
 import { User } from 'src/routes/user/entities/user.entity';
@@ -20,15 +21,18 @@ export class Option {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ description: '선택지 번호' })
   @Column({ type: 'int' })
   optionNumber: number;
 
+  @ApiProperty({ description: '선택지 내용' })
   @Column({
     type: 'varchar',
     // unique: true,
   })
   content: string;
 
+  @ApiProperty({ description: '선택지 점수' })
   @Column({ type: 'int' })
   optionScore: number;
 
